@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  fastapi_uow_001_db_dev:
+    container_name: "fastapi_uow_001_db_dev"
+    build:
+      context: .
+      dockerfile: Dockerfile-db-local
+    volumes:
+      - ./pg_db_local:/var/lib/postgresql/data/
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    environment:
+      TZ: "Etc/UTC"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    shm_size: "5gb"
+    ports:
+      - "15000:5432"

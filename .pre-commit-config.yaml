@@ -1,0 +1,41 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
+        args: ["--config=pyproject.toml", src]
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.11.5
+    hooks:
+      - id: isort
+        args: ["--config pyproject.toml"]
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args: ["--config=.flake8", src]
+
+  # !!! This is the only way MYPY checks correctly !!!
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: bash -c 'mypy --config-file mypy.ini src/main.py'
+        # Use language: system to run Mypy in an existing environment
+        language: system
+        # trigger for commits changing Python files
+        types: [python]
+        # use require_serial so that script
+        # is only called once per commit
+        require_serial: true
+        verbose: true
